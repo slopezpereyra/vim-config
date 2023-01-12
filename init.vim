@@ -24,7 +24,17 @@ set cc=80
 set clipboard=unnamedplus
 set cursorline
 set noswapfile
-set backupdir=~/.cache/nvim
+set backupdir=~/.cache/nvim 
+
+" Tmux 
+if exists('$TMUX')
+
+    " Colors in tmux
+    let &t_8f = "<Esc>[38;2;%lu;%lu;%lum"
+    let &t_8b = "<Esc>[48;2;%lu;%lu;%lum"
+
+endif
+
 set background=dark
 
 
@@ -70,6 +80,8 @@ Plug 'sunjon/shade.nvim'
 Plug 'koenverburg/peepsight.nvim'
 Plug 'savq/melange'
 Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
+Plug 'olivercederborg/poimandres.nvim'
+Plug 'catppuccin/vim', { 'as': 'catppuccin' }
 
 call plug#end()
 
@@ -222,3 +234,5 @@ inoremap <C-l> <c-g>u<Esc>[s1z=`]a<c-g>u
 
 filetype plugin indent on
 autocmd VimEnter * NERDTree | wincmd p
+
+colorscheme melange

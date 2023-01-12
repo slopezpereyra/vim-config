@@ -1,0 +1,35 @@
+
+
+snippet hello "hi" iA
+setwd("hi")
+endsnippet
+
+snippet sgen "Set generic" iA
+#'@export
+methods::setGeneric(
+    "$1",
+    function(object) standardGeneric("$1")
+)
+endsnippet
+
+snippet smet "Set method" iA
+
+#' Description.
+#'
+#' @return : type
+#'
+#' @export
+methods::setMethod(
+    "$1",
+    "class",
+    function(object) {
+		
+    }
+)
+endsnippet
+
+snippet function "Function" iA
+$1 <- function(){
+		
+}
+endsnippet
