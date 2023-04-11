@@ -17,6 +17,8 @@ set backupdir=~/.cache/nvim
 set clipboard+=unnamedplus
 set background=dark
 set termguicolors
+set hidden
+set autoread
 
 " Tmux
 if exists('$TMUX')
@@ -53,7 +55,7 @@ Plug 'akinsho/bufferline.nvim', { 'tag': 'v3.*' }
 Plug 'tpope/vim-fugitive'
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
 
-" Snippets 
+" Snippets
 
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
@@ -72,7 +74,11 @@ Plug 'KeitaNakamura/tex-conceal.vim', {'for': 'tex'}
 Plug 'JuliaEditorSupport/julia-vim'
 Plug 'axvr/zepl.vim'
 
-" CMP 
+" R
+
+Plug 'jalvesaq/Nvim-R'
+
+" CMP
 
 Plug 'hrsh7th/cmp-nvim-lsp'
 Plug 'hrsh7th/cmp-buffer'
@@ -86,24 +92,47 @@ Plug 'quangnguyen30192/cmp-nvim-ultisnips'
 " Colors schemes
 
 Plug 'morhetz/gruvbox'
-Plug 'EdenEast/nightfox.nvim' 
+Plug 'EdenEast/nightfox.nvim'
 Plug 'catppuccin/nvim', { 'as': 'catppuccin' }
 Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
 Plug 'projekt0n/github-nvim-theme', { 'tag': 'v0.0.7' }
-Plug 'savq/melange'
 Plug 'AlexvZyl/nordic.nvim', { 'branch': 'main' }
 Plug 'shaunsingh/nord.nvim'
 Plug 'sainnhe/gruvbox-material'
-Plug 'sainnhe/everforest'
 Plug 'rmehri01/onenord.nvim', { 'branch': 'main' }
-Plug 'LunarVim/lunar.nvim'
-Plug 'rose-pine/neovim'
 
 call plug#end()
 
+function! SetLatexWritingConfig()
+    set tw=80
+    set wrap 
+    set spell 
+endfunction
+
+function! SetJuliaEnvironment()
+    if !(filereadable("Manifest.toml") && filereadable("Project.toml"))
+        return 
+    endif
+    execute "buffer zepl: julia"
+    call chansend(&channel, "using Pkg\n")
+    call chansend(&channel, "Pkg.activate(".")\n")
+    execute "buffer #"
+endfunction
+
+function! SetJuliaRepl()
+    execute 'keep Repl julia' 
+    execute 'write'
+    res 45
+    execute "normal! \<C-w>\<C-r>"
+    call SetJuliaEnvironment()
+endfunction
+
+
+autocmd BufRead,BufNewFile *.tex,*.md :call SetLatexWritingConfig()
+autocmd BufRead,BufNewFile *.jl :call SetJuliaRepl()
 
 set completeopt=menu,preview,menuone,noselect
-"Useful NERDTree ignores for LaTex project
+"Useful NERDTree ignores for LaTex projects
 let NERDTreeIgnore=['\.gz', '\.fls', '\.fdb_latexmk', '\.aux', '\.pdf']
 
 "let g:coq_settings = { 'auto_start': v:true }
@@ -113,7 +142,7 @@ let NERDTreeIgnore=['\.gz', '\.fls', '\.fdb_latexmk', '\.aux', '\.pdf']
 " Don't open QuickFix for warning messages if no errors are present
 syntax enable
 filetype plugin indent on
-let g:vimtex_quickfix_open_on_warning = 0  
+let g:vimtex_quickfix_open_on_warning = 0
 let g:vimtex_view_method = "zathura"
 
 let g:tex_flavor='latex'
@@ -125,14 +154,14 @@ let g:tex_superscripts= "[0-9a-zA-W.,:;+-<>/()=]"
 let g:tex_subscripts= "[0-9aehijklmnoprstuvx,+-/().]"
 let g:tex_conceal_frac=1
 
-let g:UltiSnipsExpandTrigger = '<Plug>(ultisnips_expand)'      
+let g:UltiSnipsExpandTrigger = '<Plug>(ultisnips_expand)'
 let g:UltiSnipsJumpForwardTrigger = '<Plug>(ultisnips_jump_forward)'
 let g:UltiSnipsJumpBackwardTrigger = '<Plug>(ultisnips_jump_backward)'
 let g:UltiSnipsListSnippets = '<c-x><c-s>'
 let g:UltiSnipsRemoveSelectModeMappings = 0
 
 
-" Lsp remaps 
+" Lsp remaps
 nnoremap <silent> gtd :lua vim.lsp.buf.hover()<CR>
 
 " Bufferline remaps
@@ -141,7 +170,7 @@ nnoremap <silent> nb :BufferLineCycleNext<CR>
 nnoremap <silent> pb :BufferLineCyclePrev<CR>
 nnoremap <silent> fb :BufferLineTogglePin<CR>
 
-" MARKDOWN PREVIEW 
+" MARKDOWN PREVIEW
 
 " set to 1, nvim will open the preview window after entering the markdown buffer
 " default: 0
@@ -244,7 +273,7 @@ let g:mkdp_theme = 'dark'
 
 lua << EOF
 
---- Autopairs 
+--- Autopairs
 
 require("nvim-autopairs").setup {}
 
@@ -382,6 +411,9 @@ local cmp = require'cmp'
   require('lspconfig')['r_language_server'].setup {
     capabilities = capabilities
   }
+  require('lspconfig')['clangd'].setup {
+    capabilities = capabilities
+  }
 
 -- If you want insert `(` after select function or method item
 local cmp_autopairs = require('nvim-autopairs.completion.cmp')
@@ -407,11 +439,11 @@ require'shade'.setup({
 -- Default configuration
 require('neoscroll').setup()
 
--- Startup screen 
+-- Startup screen
 require"startup".setup()
 
 
--- TELESCOPE 
+-- TELESCOPE
 
 local builtin = require('telescope.builtin')
 vim.keymap.set('n', '<leader>ff', builtin.find_files, {})
@@ -443,7 +475,7 @@ require'nvim-treesitter.configs'.setup {
 --}
 --require('lspconfig')['julials'].setup {
 --    capabilities = capabilities
---} 
+--}
 --require('lspconfig')['r_language_server'].setup {
 --    capabilities = capabilities
 --  }
@@ -511,30 +543,54 @@ require("indent_blankline").setup {
     show_current_context = true,
     show_current_content_start = true,
 }
- 
+
 require'lualine'.setup {
           options = {
-            theme = 'gruvbox-material'
+            theme = 'tokyonight'
           }
         }
 
+-- THEME CONFIGURATION
+require("tokyonight").setup({
+  -- your configuration comes here
+  -- or leave it empty to use the default settings
+  style = "night", -- The theme comes in three styles, `storm`, `moon`, a darker variant `night` and `day`
+  light_style = "day", -- The theme is used when the background is set to light
+  transparent = false, -- Enable this to disable setting the background color
+  terminal_colors = true, -- Configure the colors used when opening a `:terminal` in Neovim
+  styles = {
+    -- Style to be applied to different syntax groups
+    -- Value is any valid attr-list value for `:help nvim_set_hl`
+    comments = { italic = true },
+    keywords = { italic = true },
+    functions = {},
+    variables = {},
+    -- Background styles. Can be "dark", "transparent" or "normal"
+    sidebars = "dark", -- style for sidebars, see below
+    floats = "dark", -- style for floating windows
+  },
+  sidebars = { "qf", "help" }, -- Set a darker background on sidebar-like windows. For example: `["qf", "vista_kind", "terminal", "packer"]`
+  day_brightness = 0.3, -- Adjusts the brightness of the colors of the **Day** style. Number between 0 and 1, from dull to vibrant colors
+  hide_inactive_statusline = false, -- Enabling this option, will hide inactive statuslines and replace them with a thin border instead. Should work with the standard **StatusLine** and **LuaLine**.
+  dim_inactive = false, -- dims inactive windows
+  lualine_bold = false, -- When `true`, section headers in the lualine theme will be bold
+
+  --- You can override specific color groups to use other groups or a hex color
+  --- function will be called with a ColorScheme table
+  ---@param colors ColorScheme
+  on_colors = function(colors) end,
+
+  --- You can override specific highlights to use other groups or a hex color
+  --- function will be called with a Highlights and ColorScheme table
+  ---@param highlights Highlights
+  ---@param colors ColorScheme
+  on_highlights = function(highlights, colors) end,
+})
+
 EOF
 
-"colorscheme gruvbox
-" Example config in Vim-Script
-let g:nord_contrast = v:true
-let g:nord_borders = v:true
-let g:nord_disable_background = v:false
-let g:nord_italic = v:false
-let g:nord_uniform_diff_background = v:true
-let g:nord_bold = v:false
-
-let g:gruvbox_material_background = 'medium'
-let g:gruvbox_material_foreground = "material"
-let g:gruvbox_material_enable_bold = 0
-let g:gruvbox_dim_inactive_windows = 0
-let g:gruvbox_material_better_performance = 1
 " Load the colorscheme
-colorscheme gruvbox-material
+colorscheme tokyonight-night 
+
 "set runtimepath-=~/local/share/nvim/plugged/indent-blankline
 "autocmd BufEnter * colorscheme default

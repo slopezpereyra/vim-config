@@ -15,15 +15,46 @@ snippet template "Basic template" b
 \usepackage[T1]{fontenc}
 \usepackage{textcomp}
 \usepackage{amsmath, amssymb}
-
+\edef\restoreparindent{\parindent=\the\parindent\relax}
+\usepackage{parskip}
+\restoreparindent
+\newtheorem{problem}{Problem}
+\newtheorem{example}{Example}
+\newtheorem{lemma}{Lemma}
+\newtheorem{theorem}{Theorem}
+\newtheorem{problem}{Problem}
+\newtheorem{example}{Example}
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{theorem}{Theorem}
 
 \begin{document}
 	$0
 \end{document}
 endsnippet
 
+snippet pset "Power set" iA 
+\\mathcal{P}($1)
+endsnippet 
+
+snippet << "Left angle" iA 
+\\langle 
+endsnippet 
+
+snippet >> "Right angle" iA 
+\\rangle 
+endsnippet 
+
+snippet sbe "Subset equal" iA 
+\\subseteq 
+endsnippet
+
 snippet pder "Partial derivative" iA
 \\frac{\partial $1}{\partial $2}
+endsnippet
+
+snippet ~> "Partial order" iA 
+\\preceq
 endsnippet
 
 snippet pspec "Program specification" iA 
@@ -38,6 +69,9 @@ snippet pBig "Big parenthesis" iA
 \\Big( $1 \\Big)
 endsnippet
 
+snippet pbig "Big parenthesis" iA
+\\big( $1 \\big)
+endsnippet
 
 snippet 2dvec "Math cal" iA
 \\begin{pmatrix} 
@@ -149,8 +183,12 @@ snippet pac "Package" b
 \usepackage[${1:options}]{${2:package}}$0
 endsnippet
 
-snippet => "implies" Ai
+snippet l=> "implies" Ai
 \implies
+endsnippet
+
+snippet => "implies" Ai
+\Rightarrow
 endsnippet
 
 snippet =< "implied by" Ai
@@ -554,22 +592,23 @@ snippet \\\ "setminus" iA
 \setminus
 endsnippet
 
-snippet >> ">>" iA
-\gg
+snippet ltc "Lattice" iA 
+\\langle ~L, ~\\hat{\\lor}~, ~\\hat{\\land}~ \\rangle
+endsnippet
+snippet supm "Supremum" iA 
+~\\hat{\\lor}~
 endsnippet
 
-snippet << "<<" iA
-\ll
+snippet infm "Supremum" iA 
+~\\hat{\\land}~
 endsnippet
-
 
 snippet ~~ "~" iA
 \sim 
 endsnippet
 
-context "math()"
-snippet set "set" wA
-\\{$1\\} $0
+snippet _> "Short implies" iA
+\\Rightarrow 
 endsnippet
 
 snippet || "mid" iA
@@ -629,6 +668,18 @@ endsnippet
 
 snippet <! "normal" iA
 \triangleleft 
+endsnippet
+
+snippet tr> "normal" iA
+\\triangleright 
+endsnippet
+
+snippet x:xs "List" iA 
+x \\triangleright xs
+endsnippet
+
+snippet ~= "equivalent" iA 
+\\equiv 
 endsnippet
 
 snippet <> "hokje" iA
