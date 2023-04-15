@@ -103,6 +103,8 @@ Plug 'rmehri01/onenord.nvim', { 'branch': 'main' }
 
 call plug#end()
 
+" Custom functions 
+
 function! SetLatexWritingConfig()
     set tw=80
     set wrap 
@@ -110,9 +112,6 @@ function! SetLatexWritingConfig()
 endfunction
 
 function! SetJuliaEnvironment()
-    if !(filereadable("Manifest.toml") && filereadable("Project.toml"))
-        return 
-    endif
     execute "buffer zepl: julia"
     call chansend(&channel, "using Pkg\n")
     call chansend(&channel, "Pkg.activate(".")\n")
@@ -124,9 +123,23 @@ function! SetJuliaRepl()
     execute 'write'
     res 45
     execute "normal! \<C-w>\<C-r>"
-    call SetJuliaEnvironment()
+    if !(filereadable("Manifest.toml") && filereadable("Project.toml"))
+        call SetJuliaEnvironment()
+    endif
 endfunction
 
+function! RunFile()
+    let extension = expand('%:e')
+    if extension  == 'py'
+        execute "!python3 " . expand('%')
+    end 
+    if extension == 'jl' 
+        execute "!julia " . expand('%')
+    endif
+endfunction  
+
+nnoremap <F5> :call RunFile()<CR>
+tnoremap <Esc> <C-\><C-n>
 
 autocmd BufRead,BufNewFile *.tex,*.md :call SetLatexWritingConfig()
 autocmd BufRead,BufNewFile *.jl :call SetJuliaRepl()
