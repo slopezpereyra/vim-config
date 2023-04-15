@@ -138,7 +138,22 @@ function! RunFile()
     endif
 endfunction  
 
-nnoremap <F5> :call RunFile()<CR>
+function! LaTexToMD()
+    %s/\\texit/\\textit/g
+    %s/\\textit{\(.\{-}\)}/\*\1\*/g
+    %s/\\textbf{\(.\{-}\)}/\**\1\**/g
+    %s/\\\\/\\newline/g
+" Add $$ symbol and new line character before each \begin{align*} environment
+    g/\\begin{align\*}/normal! O$$
+  " Add $$ symbol and new line character after each \end{align*} environment
+    g/\\end{align\*}/normal! o$$
+    g/^\\usepackage/d
+    g/^\\documentclass/d
+    g/\\[^{}]*{document}/d
+endfunction
+
+nnoremap <F5> :source $MYVIMRC<CR>
+nnoremap <F4> :call RunFile()<CR>
 tnoremap <Esc> <C-\><C-n>
 
 autocmd BufRead,BufNewFile *.tex,*.md :call SetLatexWritingConfig()
