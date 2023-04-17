@@ -8,10 +8,9 @@ set ignorecase
 set hlsearch
 set tabstop=4
 set expandtab
-set shiftwidth=4
+set shiftwidth=4 
 set autoindent
 set cc=80
-set cursorline
 set noswapfile
 set backupdir=~/.cache/nvim
 set clipboard+=unnamedplus
@@ -19,6 +18,11 @@ set background=dark
 set termguicolors
 set hidden
 set autoread
+set smartcase
+set ruler
+set cursorline
+set backupdir=~/.cache/vim
+set wildignore+=.aux,.fdb_latexmk,.fls,.synctex,.log,.pdf
 
 " Tmux
 if exists('$TMUX')
@@ -152,9 +156,23 @@ function! LaTexToMD()
     g/\\[^{}]*{document}/d
 endfunction
 
+let g:Curscheme = 2
+function! ChangeColors()
+    let themes = ['gruvbox', 'gruvbox-material', 'nord', 'tokyonight']
+    if g:Curscheme == 3 
+        let g:Curscheme = 0 
+    else 
+        let g:Curscheme  = g:Curscheme + 1
+    endif
+    execute "colorscheme " . themes[g:Curscheme]
+    let lua_code = 'require"lualine".setup({options = {theme = "' . themes[g:Curscheme] . '"}})'
+    call luaeval(lua_code)
+endfunction
+
 nnoremap <F5> :source $MYVIMRC<CR>
 nnoremap <F4> :call RunFile()<CR>
 tnoremap <Esc> <C-\><C-n>
+nnorema <Tab> :call ChangeColors()<CR>
 
 autocmd BufRead,BufNewFile *.tex,*.md :call SetLatexWritingConfig()
 autocmd BufRead,BufNewFile *.jl :call SetJuliaRepl()
@@ -493,48 +511,6 @@ require'nvim-treesitter.configs'.setup {
   },
 }
 
--- LSP Servers
---local lsp = require "lspconfig"
---local coq = require "coq" -- add this
---
---local capabilities = require('cmp_nvim_lsp').default_capabilities()
---require('lspconfig')['pyright'].setup {
---    capabilities = capabilities
---}
---require('lspconfig')['julials'].setup {
---    capabilities = capabilities
---}
---require('lspconfig')['r_language_server'].setup {
---    capabilities = capabilities
---  }
-
---require'lspconfig'.pyright.setup{}
---require'lspconfig'.r_language_server.setup{}
---require'lspconfig'.julials.setup{}
---lsp.pyright.setup(coq.lsp_ensure_capabilities())
---lsp.julials.setup(coq.lsp_ensure_capabilities())
----- COQ
---
---require("coq_3p") {
---  { src = "vimtex",  short_name = "vTEX" }
---}
-
--- LUALINE
-local custom_gruvbox = require'lualine.themes.nord'
---require('lualine').setup {
---  options = {
---    -- ... your lualine config
---    theme = 'tokyonight'
---    -- ... your lualine config
---  }
---}
-require('lualine').setup {
-  options = { theme  = custom_gruvbox },
-}
---Change the background of lualine_c section for normal mode
-custom_gruvbox.normal.c.bg = '#112233'
-
-
 
 -- ICONS
 
@@ -561,10 +537,6 @@ require'nvim-web-devicons'.setup {
 
 -- INDENT LINES
 
---vim.opt.list = true
---vim.opt.listchars:append "space:⋅"
---vim.opt.listchars:append "eol:↴"
-
 require("indent_blankline").setup {
     space_char_blankline = " ",
     show_end_of_line = false,
@@ -572,9 +544,11 @@ require("indent_blankline").setup {
     show_current_content_start = true,
 }
 
+-- Lualine
+
 require'lualine'.setup {
           options = {
-            theme = 'tokyonight'
+            theme = 'nord'
           }
         }
 
@@ -618,7 +592,13 @@ require("tokyonight").setup({
 EOF
 
 " Load the colorscheme
-colorscheme tokyonight-night 
+" " Example config in Vim-Script
+let g:nord_contrast = v:true
+let g:nord_borders = v:true
+let g:nord_disable_background = v:false
+let g:nord_italic = v:false
+let g:nord_uniform_diff_background = v:true
+let g:nord_bold = v:false
 
-"set runtimepath-=~/local/share/nvim/plugged/indent-blankline
-"autocmd BufEnter * colorscheme default
+" Load the colorscheme
+colorscheme nord
