@@ -16,6 +16,7 @@ snippet template "Basic template" b
 \usepackage{textcomp}
 \usepackage{amsmath, amssymb}
 \edef\restoreparindent{\parindent=\the\parindent\relax}
+\DeclareSymbolFont{letters}{OML}{ztmcm}{m}{it}
 \usepackage{parskip}
 \restoreparindent
 \newtheorem{problem}{Problem}
@@ -31,6 +32,50 @@ snippet template "Basic template" b
 \begin{document}
 	$0
 \end{document}
+endsnippet
+
+snippet $ "Math" iA 
+\$$1\$
+endsnippet
+
+snippet trto "Transforms to" iA
+\\overset{$1}{\\to}
+endsnippet
+
+snippet lL "Bracket" iA
+\\left[ $1\\cdot \\right]
+endsnippet
+
+snippet aa "Alpha" iA 
+\\alpha
+endsnippet
+
+snippet eps "Epsilon" iA 
+\\epsilon
+endsnippet
+
+snippet lda "Lambda" iA 
+\\lambda
+endsnippet
+
+snippet cbar "Conclusion bar" iA 
+\\mathclap{\rule{2cm}{0.4pt}} \\\\
+endsnippet
+
+snippet gp "Greek psi" iA 
+\\psi
+endsnippet
+
+snippet gvt "Var greek psi" iA 
+\\varphi
+endsnippet
+
+snippet gt "Greek phi" iA 
+\\phi
+endsnippet
+
+snippet rlp "Right left parentesis" iA 
+\\left( $0 \\right)
 endsnippet
 
 snippet pset "Power set" iA 
@@ -218,7 +263,7 @@ endsnippet
 snippet ali "Align" bA
 \begin{align*}
 	${1:${VISUAL}}
-.\end{align*}
+\end{align*}
 endsnippet
 
 
@@ -319,7 +364,9 @@ snippet pmat "pmat" iA
 endsnippet
 
 snippet bmat "bmat" iA
-\begin{bmatrix} $1 \end{bmatrix} $0
+\begin{bmatrix} 
+		$1 
+\end{bmatrix} $0
 endsnippet
 
 context "math()"
@@ -679,7 +726,7 @@ x \\triangleright xs
 endsnippet
 
 snippet ~= "equivalent" iA 
-\\equiv 
+\\equiv
 endsnippet
 
 snippet <> "hokje" iA
@@ -754,6 +801,26 @@ endsnippet
 
 snippet DD "D" iA
 \mathbb{D}
+endsnippet
+
+snippet aX "Axiom" iA 
+\\AxiomC{\$ $1 \$}
+endsnippet
+
+snippet binf "Binary inference" iA 
+\\BinaryInfC{\$ $1 \$}
+endsnippet
+
+snippet uinf "Unary inference" iA 
+\\UnaryInfC{\$ $1 \$}
+endsnippet
+
+snippet tinf "Trinary inference" iA 
+\\TrinaryInfC{\$ $1 \$}
+endsnippet
+
+snippet rlb "Right label" iA 
+\\RightLabel{\\scriptsize($1)}
 endsnippet
 
 # vim:ft=snippets

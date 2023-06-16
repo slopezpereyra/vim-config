@@ -52,23 +52,25 @@ Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'ryanoasis/vim-devicons'
 Plug 'sbdchd/neoformat'
 Plug 'sunjon/shade.nvim'
-Plug 'tpope/vim-surround'
+Plug 'kylechui/nvim-surround'
 Plug 'nacro90/numb.nvim'
 Plug 'windwp/nvim-autopairs'
 Plug 'akinsho/bufferline.nvim', { 'tag': 'v3.*' }
 Plug 'tpope/vim-fugitive'
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
+Plug 'kkoomen/vim-doge', { 'do': { -> doge#install() } }
+Plug 'jbyuki/instant.nvim'
 
-" Snippets
+"Snippets
 
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 
-" LSP
+"LSP
 
 Plug 'neovim/nvim-lspconfig'
 
-" LaTex suppport
+"LaTex suppport
 
 Plug 'lervag/vimtex'
 Plug 'KeitaNakamura/tex-conceal.vim', {'for': 'tex'}
@@ -104,6 +106,12 @@ Plug 'AlexvZyl/nordic.nvim', { 'branch': 'main' }
 Plug 'shaunsingh/nord.nvim'
 Plug 'sainnhe/gruvbox-material'
 Plug 'rmehri01/onenord.nvim', { 'branch': 'main' }
+Plug 'embark-theme/vim'
+Plug 'RRethy/nvim-base16'
+Plug 'jnurmine/Zenburn'
+Plug 'Mofiqul/vscode.nvim'
+Plug 'lmburns/kimbox'
+Plug 'marko-cerovac/material.nvim'
 
 call plug#end()
 
@@ -143,10 +151,10 @@ function! RunFile()
 endfunction  
 
 function! LaTexToMD()
-    %s/\\texit/\\textit/g
     %s/\\textit{\(.\{-}\)}/\*\1\*/g
     %s/\\textbf{\(.\{-}\)}/\**\1\**/g
     %s/\\\\/\\newline/g
+    %s/---/—/g
 " Add $$ symbol and new line character before each \begin{align*} environment
     g/\\begin{align\*}/normal! O$$
   " Add $$ symbol and new line character after each \end{align*} environment
@@ -158,18 +166,20 @@ endfunction
 
 let g:Curscheme = 2
 function! ChangeColors()
-    let themes = ['gruvbox', 'gruvbox-material', 'nord', 'tokyonight']
-    if g:Curscheme == 3 
+    let themes = ['gruvbox', 'gruvbox-material', 'nord', 'tokyonight', 'embark', 'catppuccin', 'kimbox', "vscode", "material"]
+    if g:Curscheme == 8 
         let g:Curscheme = 0 
     else 
         let g:Curscheme  = g:Curscheme + 1
     endif
     execute "colorscheme " . themes[g:Curscheme]
+    echo themes[g:Curscheme]
     let lua_code = 'require"lualine".setup({options = {theme = "' . themes[g:Curscheme] . '"}})'
     call luaeval(lua_code)
 endfunction
 
 nnoremap <F5> :source $MYVIMRC<CR>
+nnoremap <F3> :e ~/.config/alacritty/alacritty.yml<CR>
 nnoremap <F4> :call RunFile()<CR>
 tnoremap <Esc> <C-\><C-n>
 nnorema <Tab> :call ChangeColors()<CR>
@@ -179,10 +189,13 @@ autocmd BufRead,BufNewFile *.jl :call SetJuliaRepl()
 
 set completeopt=menu,preview,menuone,noselect
 "Useful NERDTree ignores for LaTex projects
-let NERDTreeIgnore=['\.gz', '\.fls', '\.fdb_latexmk', '\.aux', '\.pdf']
+let NERDTreeIgnore=['\.gz', '\.fls', '\.fdb_latexmk', '\.aux', '\.pdf', '.in']
+let g:NERDTreeWinPos = "right"
+autocmd VimEnter * NERDTree | wincmd p
 
-"let g:coq_settings = { 'auto_start': v:true }
-"autocmd VimEnter * NERDTree | wincmd p
+" Instant 
+let g:instant_username = "bebutron"
+
 
 " LATEX : Reference: https://github.com/gillescastel/latex-snippets
 " Don't open QuickFix for warning messages if no errors are present
@@ -206,6 +219,8 @@ let g:UltiSnipsJumpBackwardTrigger = '<Plug>(ultisnips_jump_backward)'
 let g:UltiSnipsListSnippets = '<c-x><c-s>'
 let g:UltiSnipsRemoveSelectModeMappings = 0
 
+" Python Documentation DOGE 
+let g:doge_doc_standard_python = 'google'
 
 " Lsp remaps
 nnoremap <silent> gtd :lua vim.lsp.buf.hover()<CR>
@@ -215,6 +230,10 @@ nnoremap <silent> cb :BufferLinePick<CR>
 nnoremap <silent> nb :BufferLineCycleNext<CR>
 nnoremap <silent> pb :BufferLineCyclePrev<CR>
 nnoremap <silent> fb :BufferLineTogglePin<CR>
+
+" NERDTree 
+" Start NERDTree and put the cursor back in the other window.
+autocmd VimEnter * NERDTree | wincmd p
 
 " MARKDOWN PREVIEW
 
@@ -319,9 +338,11 @@ let g:mkdp_theme = 'dark'
 
 lua << EOF
 
---- Autopairs
+--- Autopairs and surround
 
 require("nvim-autopairs").setup {}
+
+require("nvim-surround").setup()
 
 -----------------------------------
 
@@ -474,8 +495,8 @@ require("bufferline").setup{}
 require('numb').setup()
 
 require'shade'.setup({
-  overlay_opacity = 50,
-  opacity_step = 1,
+  overlay_opacity = 90,
+  opacity_step = 5,
   keys = {
     brightness_up    = '<C-Up>',
     brightness_down  = '<C-Down>',
@@ -548,7 +569,7 @@ require("indent_blankline").setup {
 
 require'lualine'.setup {
           options = {
-            theme = 'nord'
+            theme = 'kimbox'
           }
         }
 
@@ -589,6 +610,188 @@ require("tokyonight").setup({
   on_highlights = function(highlights, colors) end,
 })
 
+require("catppuccin").setup({
+    flavour = "mocha", -- latte, frappe, macchiato, mocha
+    background = { -- :h background
+        light = "latte",
+        dark = "mocha",
+    },
+    transparent_background = false,
+    show_end_of_buffer = false, -- show the '~' characters after the end of buffers
+    term_colors = false,
+    dim_inactive = {
+        enabled = true,
+        shade = "dark",
+        percentage = 0.15,
+    },
+    no_italic = false, -- Force no italic
+    no_bold = false, -- Force no bold
+    styles = {
+        comments = { "italic" },
+        conditionals = { "italic" },
+        loops = {},
+        functions = {},
+        keywords = {},
+        strings = {},
+        variables = {},
+        numbers = {},
+        booleans = {},
+        properties = {},
+        types = {},
+        operators = {},
+    },
+    color_overrides = {},
+    custom_highlights = {},
+    integrations = {
+        cmp = true,
+        gitsigns = true,
+        nvimtree = true,
+        telescope = true,
+        notify = false,
+        mini = false,
+        -- For more plugins integrations please scroll down (https://github.com/catppuccin/nvim#integrations)
+    },
+})
+
+-- These options can also be set using:
+vim.g.kimbox_config = {
+  -- ...options from above
+}
+
+require("kimbox").setup({
+    ---Background color:
+    ---    burnt_coffee : #231A0C   -- legacy: "medium"
+    ---    cannon       : #221A02   -- legacy: "ocean"
+    ---    used_oil     : #221A0F   -- legacy: "vscode"
+    ---    deep         : #0F111B
+    ---    zinnwaldite  : #291804   -- legacy: "darker"
+    ---    eerie        : #1C0B28
+    style = "burnt_coffee",
+    ---Key used to cycle through the backgrounds in "toggle_style_list"
+    toggle_style_key = "<Leader>ts",
+    ---List of background names
+    toggle_style_list = require("kimbox").KimboxBgColors,
+    ---New Lua-Treesitter highlight groups
+    ---See below (New Lua Treesitter Highlight Groups) for an explanation
+    ---  Location where Treesitter capture groups changed to '@capture.name'
+    ---  Commit:    030b422d1
+    ---  Vim patch: patch-8.2.0674
+    langs08 = true,
+    ---Used with popup menus (coc.nvim mainly) --
+    popup = {
+        background = false, -- use background color for PMenu
+    },
+    -- ━━━ Plugin Related ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    diagnostics = {
+        background = true, -- use background color for virtual text
+    },
+    -- ━━━ General Formatting ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    allow_bold = false,
+    allow_italic = false,
+    allow_underline = false,
+    allow_undercurl = true,
+    allow_reverse = false,
+    transparent = false,   -- don't set background
+    term_colors = true,    -- if true enable the terminal
+    ending_tildes = false, -- show the end-of-buffer tildes
+    -- ━━━ Custom Highlights ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    ---Override default colors
+    ---@type table<string, string>
+    colors = {},
+    ---Override highlight groups
+    ---@type table<string, KimboxHighlightMap>
+    highlights = {},
+    ---Plugins and langauges that can be disabled
+    ---To view options: print(require("kimbox.highlights").{langs,langs08,plugins})
+    ---@type {langs: string[], langs08: string[], plugins: string[]}
+    disabled = {
+        ---Disabled languages
+        ---@see KimboxHighlightLangs
+        langs = {},
+        ---Disabled languages with '@' treesitter highlights
+        ---@see KimboxHighlightLangs08
+        langs08 = {},
+        ---Disabled plugins
+        ---@see KimboxHighlightPlugins
+        plugins = {},
+    },
+    ---Run a function before the colorscheme is loaded
+    ---@type fun(): nil
+    run_before = nil,
+    ---Run a function after the colorscheme is loaded
+    ---@type fun(): nil
+    run_after = nil,
+})
+
+require("kimbox").load()
+
+vim.g.material_style = "darker"
+
+require('material').setup({
+
+    contrast = {
+        terminal = false, -- Enable contrast for the built-in terminal
+        sidebars = true, -- Enable contrast for sidebar-like windows ( for example Nvim-Tree )
+        floating_windows = false, -- Enable contrast for floating windows
+        cursor_line = false, -- Enable darker background for the cursor line
+        non_current_windows = false, -- Enable darker background for non-current windows
+        filetypes = {}, -- Specify which filetypes get the contrasted (darker) background
+    },
+
+    styles = { -- Give comments style such as bold, italic, underline etc.
+        comments = { --[[ italic = true ]] },
+        strings = { --[[ bold = true ]] },
+        keywords = { --[[ underline = true ]] },
+        functions = { --[[ bold = true, undercurl = true ]] },
+        variables = {},
+        operators = {},
+        types = {},
+    },
+
+    plugins = { -- Uncomment the plugins that you use to highlight them
+        -- Available plugins:
+        -- "dap",
+        -- "dashboard",
+        -- "gitsigns",
+        -- "hop",
+        -- "indent-blankline",
+        -- "lspsaga",
+        -- "mini",
+        -- "neogit",
+        -- "neorg",
+        -- "nvim-cmp",
+        -- "nvim-navic",
+        -- "nvim-tree",
+        "nvim-web-devicons",
+        -- "sneak",
+        "telescope",
+        -- "trouble",
+        -- "which-key",
+    },
+
+    disable = {
+        colored_cursor = false, -- Disable the colored cursor
+        borders = false, -- Disable borders between verticaly split windows
+        background = false, -- Prevent the theme from setting the background (NeoVim then uses your terminal background)
+        term_colors = false, -- Prevent the theme from setting terminal colors
+        eob_lines = false -- Hide the end-of-buffer lines
+    },
+
+    high_visibility = {
+        lighter = false, -- Enable higher contrast text for lighter style
+        darker = false -- Enable higher contrast text for darker style
+    },
+
+    lualine_style = "default", -- Lualine style ( can be 'stealth' or 'default' )
+
+    async_loading = true, -- Load parts of the theme asyncronously for faster startup (turned on by default)
+
+    custom_colors = nil, -- If you want to everride the default colors, set this to a function
+
+    custom_highlights = {}, -- Overwrite highlights with your own
+})
+
+
 EOF
 
 " Load the colorscheme
@@ -600,5 +803,23 @@ let g:nord_italic = v:false
 let g:nord_uniform_diff_background = v:true
 let g:nord_bold = v:false
 
+"Use 24-bit (true-color) mode in Vim/Neovim when outside tmux.
+"If you're using tmux version 2.2 or later, you can remove the outermost $TMUX check and use tmux's 24-bit color support
+"(see < http://sunaku.github.io/tmux-24bit-color.html#usage > for more information.)
+if (empty($TMUX))
+  if (has("nvim"))
+    "For Neovim 0.1.3 and 0.1.4 < https://github.com/neovim/neovim/pull/2198 >
+    let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+  endif
+  "For Neovim > 0.1.5 and Vim > patch 7.4.1799 < https://github.com/vim/vim/commit/61be73bb0f965a895bfb064ea3e55476ac175162 >
+  "Based on Vim patch 7.4.1770 (`guicolors` option) < https://github.com/vim/vim/commit/8a633e3427b47286869aa4b96f2bfc1fe65b25cd >
+  " < https://github.com/neovim/neovim/wiki/Following-HEAD#20160511 >
+  if (has("termguicolors"))
+    set termguicolors
+  endif
+endif
+
+
+" 
 " Load the colorscheme
-colorscheme nord
+colorscheme kimbox
