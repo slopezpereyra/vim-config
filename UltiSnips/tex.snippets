@@ -34,8 +34,25 @@ snippet template "Basic template" b
 \end{document}
 endsnippet
 
+
+snippet tf "Therefore" iA
+\\therefore 
+endsnippet
+
 snippet $ "Math" iA 
 \$$1\$
+endsnippet
+
+snippet ii "Italics" iA 
+\\textit{$1}
+endsnippet
+
+snippet Ss "Sum" iA 
+\\sum i 
+endsnippet
+
+snippet sji "Math" iA 
+\\sum_{j=1}^n $1
 endsnippet
 
 snippet trto "Transforms to" iA
@@ -228,16 +245,16 @@ snippet pac "Package" b
 \usepackage[${1:options}]{${2:package}}$0
 endsnippet
 
-snippet l=> "implies" Ai
-\implies
-endsnippet
-
 snippet => "implies" Ai
 \Rightarrow
 endsnippet
 
+snippet mpq "Max pq" Ai 
+\\langle Max ~ p, q : 0 \\leq p < q < n : a.p - a.q \\rangle
+endsnippet
+
 snippet =< "implied by" Ai
-\impliedby
+\Leftarrow
 endsnippet
 
 context "math()"
