@@ -10,6 +10,9 @@ set tabstop=4
 set expandtab
 set shiftwidth=4 
 set autoindent
+set smartindent
+set showmatch
+set signcolumn=yes
 set cc=80
 set noswapfile
 set backupdir=~/.cache/nvim
@@ -20,6 +23,9 @@ set hidden
 set autoread
 set smartcase
 set ruler
+set wrap
+set nocursorcolumn
+set nocursorline
 set cursorline
 set backupdir=~/.cache/vim
 set wildignore+=.aux,.fdb_latexmk,.fls,.synctex,.log,.pdf
@@ -34,7 +40,7 @@ endif
 " Based on Vim patch 7.4.1770 (`guicolors` option) - https://github.com/vim/vim/commit/8a633e3427b47286869aa4b96f2bfc1fe65b25cd
 " https://github.com/neovim/neovim/wiki/Following-HEAD#20160511
 if (has('termguicolors'))
-  set termguicolors
+    set termguicolors
 endif
 
 " Tmux
@@ -49,22 +55,25 @@ endif
 call plug#begin('~/local/share/nvim/plugged')
 
 " Miscellaneous
+
+Plug 'stevearc/aerial.nvim'
+Plug 'nvim-tree/nvim-tree.lua'
+Plug 'voldikss/vim-floaterm'
+Plug 'rush-rs/tree-sitter-asm'
 Plug 'vim-autoformat/vim-autoformat'"
 Plug 'startup-nvim/startup.nvim'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'tpope/vim-sensible'
 Plug 'lukas-reineke/indent-blankline.nvim'
-Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.0' }
+Plug 'nvim-telescope/telescope.nvim'
 Plug 'kyazdani42/nvim-web-devicons'
 Plug 'karb94/neoscroll.nvim'
-Plug 'scrooloose/nerdtree'
-Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.0' }
+"Plug 'scrooloose/nerdtree'
 Plug 'jiangmiao/auto-pairs'
 Plug 'nvim-lualine/lualine.nvim'
-Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate', 'use':  'rush-rs/tree-sitter-asm'}
 Plug 'ryanoasis/vim-devicons'
 Plug 'sbdchd/neoformat'
-Plug 'sunjon/shade.nvim'
 Plug 'kylechui/nvim-surround'
 Plug 'nacro90/numb.nvim'
 Plug 'windwp/nvim-autopairs'
@@ -82,6 +91,9 @@ Plug 'honza/vim-snippets'
 "LSP
 
 Plug 'neovim/nvim-lspconfig'
+Plug 'onsails/lspkind.nvim'
+Plug 'ray-x/lsp_signature.nvim'
+
 
 "LaTex suppport
 
@@ -118,6 +130,7 @@ Plug 'quangnguyen30192/cmp-nvim-ultisnips'
 
 " Colors schemes
 
+Plug 'drewtempelmeyer/palenight.vim'
 Plug 'morhetz/gruvbox'
 Plug 'EdenEast/nightfox.nvim'
 Plug 'catppuccin/nvim', { 'as': 'catppuccin' }
@@ -130,7 +143,6 @@ Plug 'rmehri01/onenord.nvim', { 'branch': 'main' }
 Plug 'embark-theme/vim'
 Plug 'jnurmine/Zenburn'
 Plug 'Mofiqul/vscode.nvim'
-Plug 'lmburns/kimbox'
 "Plug 'marko-cerovac/material.nvim'
 Plug 'kaicataldo/material.vim', { 'branch': 'main' }
 Plug 'mipmip/vim-petra'
@@ -138,6 +150,7 @@ Plug 'savq/melange-nvim'
 Plug 'sainnhe/everforest'
 Plug 'dracula/vim'
 Plug 'chriskempson/base16-vim'
+Plug 'nyoom-engineering/oxocarbon.nvim'
 
 call plug#end()
 
@@ -190,10 +203,10 @@ function! LaTexToMD()
     g/\\[^{}]*{document}/d
 endfunction
 
-let g:Curscheme = 2
+let g:Curscheme = 3
 function! ChangeColors()
-    let themes = ['dracula', 'petra', 'gruvbox', 'gruvbox-material', 'nord', 'tokyonight', 'catppuccin', 'kimbox', "vscode", "material"]
-    if g:Curscheme == 8 
+    let themes = ['dracula', 'petra', 'gruvbox', 'gruvbox-material', 'nord', 'tokyonight-moon', 'catppuccin', "vscode", "material"]
+    if g:Curscheme == 7 
         let g:Curscheme = 0 
     else 
         let g:Curscheme  = g:Curscheme + 1
@@ -206,7 +219,7 @@ endfunction
 
 nnoremap <F5> :source $MYVIMRC<CR>
 nnoremap <F3> :e ~/.config/alacritty/alacritty.yml<CR>
-nnoremap <F4> :call RunFile()<CR>
+nnoremap <F4> :!make runQEMU<CR>
 tnoremap <Esc> <C-\><C-n>
 nnorema <Tab> :call ChangeColors()<CR>
 
@@ -214,10 +227,14 @@ autocmd BufRead,BufNewFile *.tex,*.md :call SetLatexWritingConfig()
 autocmd BufRead,BufNewFile *.jl :call SetJuliaRepl()
 
 set completeopt=menu,preview,menuone,noselect
-"Useful NERDTree ignores for LaTex projects
-let NERDTreeIgnore=['\.gz', '\.fls', '\.fdb_latexmk', '\.aux', '\.pdf', '.in']
-let g:NERDTreeWinPos = "right"
-autocmd VimEnter * NERDTree | wincmd p
+
+"" ------ NERDTree Config -------
+"let NERDTreeIgnore=['\.gz', '\.fls', '\.fdb_latexmk', '\.aux', '\.pdf', '.in']
+"let NERDTreeMinimalUI = 1
+"let NERDTreeSortOrder = ['[[extension]]']
+"let NERDTreeShowLineNumbers=1
+"let g:NERDTreeWinPos = "right"
+"autocmd VimEnter * NERDTree | wincmd p
 
 " Instant 
 let g:instant_username = "bebutron"
@@ -249,7 +266,8 @@ let g:UltiSnipsRemoveSelectModeMappings = 0
 let g:doge_doc_standard_python = 'google'
 
 " Lsp remaps
-nnoremap <silent> gtd :lua vim.lsp.buf.hover()<CR>
+nnoremap <silent> sd :lua vim.lsp.buf.hover()<CR>
+nnoremap <silent> gtd :lua vim.lsp.buf.definition()<CR>
 
 " Bufferline remaps
 nnoremap <silent> cb :BufferLinePick<CR>
@@ -257,9 +275,6 @@ nnoremap <silent> nb :BufferLineCycleNext<CR>
 nnoremap <silent> pb :BufferLineCyclePrev<CR>
 nnoremap <silent> fb :BufferLineTogglePin<CR>
 
-" NERDTree 
-" Start NERDTree and put the cursor back in the other window.
-autocmd VimEnter * NERDTree | wincmd p
 
 " MARKDOWN PREVIEW
 
@@ -362,7 +377,64 @@ let g:mkdp_filetypes = ['markdown']
 " By default the theme is define according to the preferences of the system
 let g:mkdp_theme = 'dark'
 
+
 lua << EOF
+
+
+-- AERIAL 
+
+require("aerial").setup({
+  -- optionally use on_attach to set keymaps when aerial has attached to a buffer
+  on_attach = function(bufnr)
+    -- Jump forwards/backwards with '{' and '}'
+    vim.keymap.set("n", "{", "<cmd>AerialPrev<CR>", { buffer = bufnr })
+    vim.keymap.set("n", "}", "<cmd>AerialNext<CR>", { buffer = bufnr })
+  end,
+
+  attach_mode = "global"
+})
+
+vim.keymap.set("n", "<leader>a", "<cmd>AerialToggle!<CR>")
+
+--- LSP extra
+local lspkind = require('lspkind')
+local cfg = {…}  -- add your config here
+require "lsp_signature".setup(cfg)
+
+--- ASM Treesitter 
+
+require('nvim-treesitter.parsers').get_parser_configs().asm = {
+    install_info = {
+        url = 'https://github.com/rush-rs/tree-sitter-asm.git',
+        files = { 'src/parser.c' },
+        branch = 'main',
+    },
+}
+
+--- NvimTree 
+
+-- disable netrw at the very start of your init.lua
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+-- set termguicolors to enable highlight groups
+vim.opt.termguicolors = true
+
+
+-- OR setup with some options
+require("nvim-tree").setup({
+  sort_by = "case_sensitive",
+  view = {
+    width = 30,
+  },
+  renderer = {
+    group_empty = true,
+  },
+  filters = {
+    dotfiles = true,
+  },
+})
+
+vim.api.nvim_command('NvimTreeOpen | wincmd p')
 
 --- Autopairs and surround
 
@@ -385,18 +457,23 @@ require'lspconfig'.julials.setup{
 local cmp = require'cmp'
 
   cmp.setup({
+  formatting = {
+    format = lspkind.cmp_format({
+      mode = 'symbol', -- show only symbol annotations
+      maxwidth = 50, -- prevent the popup from showing more than provided characters (e.g 50 will not show more than 50 characters)
+      ellipsis_char = '...'})},
     snippet = {
       -- REQUIRED - you must specify a snippet engine
       expand = function(args)
-        vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
+        --vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
         -- require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
         -- require('snippy').expand_snippet(args.body) -- For `snippy` users.
         vim.fn["UltiSnips#Anon"](args.body) -- For `ultisnips` users.
       end,
     },
     window = {
-      -- completion = cmp.config.window.bordered(),
-      -- documentation = cmp.config.window.bordered(),
+      completion = cmp.config.window.bordered(),
+      documentation = cmp.config.window.bordered(),
     },
     mapping = cmp.mapping.preset.insert({
         ["<Tab>"] = cmp.mapping({
@@ -460,7 +537,6 @@ local cmp = require'cmp'
       { name = 'nvim_lsp' },
       { name = 'latex_symbols' },
       { name = 'ultisnips' }, -- For ultisnips users.
-    }, {
       { name = 'buffer' },
     })
   })
@@ -520,15 +596,6 @@ cmp.event:on(
 require("bufferline").setup{}
 require('numb').setup()
 
-require'shade'.setup({
-  overlay_opacity = 90,
-  opacity_step = 5,
-  keys = {
-    brightness_up    = '<C-Up>',
-    brightness_down  = '<C-Down>',
-    toggle           = '<Leader>s',
-  }
-})
 -- Default configuration
 require('neoscroll').setup()
 
@@ -538,12 +605,12 @@ require"startup".setup()
 
 -- TELESCOPE
 
+--require('telescope').setup()
 local builtin = require('telescope.builtin')
-vim.keymap.set('n', '<leader>ff', builtin.find_files, {})
+vim.keymap.set('n', '<leader>ft', builtin.find_files, {})
 vim.keymap.set('n', '<leader>fg', builtin.live_grep, {})
 vim.keymap.set('n', '<leader>fb', builtin.buffers, {})
 vim.keymap.set('n', '<leader>fh', builtin.help_tags, {})
-
 
 -- TREESITTER
 
@@ -584,18 +651,11 @@ require'nvim-web-devicons'.setup {
 
 -- INDENT LINES
 
-require("indent_blankline").setup {
-    space_char_blankline = " ",
-    show_end_of_line = false,
-    show_current_context = true,
-    show_current_content_start = true,
-}
-
--- Lualine
+require("ibl").setup {  }
 
 require'lualine'.setup {
           options = {
-            theme = 'material'
+            theme = 'gruvbox-material'
           }
         }
 
@@ -611,8 +671,8 @@ require("tokyonight").setup({
     -- Style to be applied to different syntax groups
     -- Value is any valid attr-list value for `:help nvim_set_hl`
     comments = { italic = true },
-    keywords = { italic = true },
-    functions = {},
+    keywords = { italic = false },
+    functions = { bold = true },
     variables = {},
     -- Background styles. Can be "dark", "transparent" or "normal"
     sidebars = "dark", -- style for sidebars, see below
@@ -621,7 +681,7 @@ require("tokyonight").setup({
   sidebars = { "qf", "help" }, -- Set a darker background on sidebar-like windows. For example: `["qf", "vista_kind", "terminal", "packer"]`
   day_brightness = 0.3, -- Adjusts the brightness of the colors of the **Day** style. Number between 0 and 1, from dull to vibrant colors
   hide_inactive_statusline = false, -- Enabling this option, will hide inactive statuslines and replace them with a thin border instead. Should work with the standard **StatusLine** and **LuaLine**.
-  dim_inactive = false, -- dims inactive windows
+  dim_inactive = true, -- dims inactive windows
   lualine_bold = false, -- When `true`, section headers in the lualine theme will be bold
 
   --- You can override specific color groups to use other groups or a hex color
@@ -679,75 +739,9 @@ require("catppuccin").setup({
     },
 })
 
--- These options can also be set using:
-vim.g.kimbox_config = {
-  -- ...options from above
-}
 
-require("kimbox").setup({
-    ---Background color:
-    ---    burnt_coffee : #231A0C   -- legacy: "medium"
-    ---    cannon       : #221A02   -- legacy: "ocean"
-    ---    used_oil     : #221A0F   -- legacy: "vscode"
-    ---    deep         : #0F111B
-    ---    zinnwaldite  : #291804   -- legacy: "darker"
-    ---    eerie        : #1C0B28
-    style = "burnt_coffee",
-    ---Key used to cycle through the backgrounds in "toggle_style_list"
-    toggle_style_key = "<Leader>ts",
-    ---List of background names
-    toggle_style_list = require("kimbox").KimboxBgColors,
-    ---New Lua-Treesitter highlight groups
-    ---See below (New Lua Treesitter Highlight Groups) for an explanation
-    ---  Location where Treesitter capture groups changed to '@capture.name'
-    ---  Commit:    030b422d1
-    ---  Vim patch: patch-8.2.0674
-    langs08 = true,
-    ---Used with popup menus (coc.nvim mainly) --
-    popup = {
-        background = false, -- use background color for PMenu
-    },
-    -- ━━━ Plugin Related ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    diagnostics = {
-        background = true, -- use background color for virtual text
-    },
-    -- ━━━ General Formatting ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    allow_bold = false,
-    allow_italic = false,
-    allow_underline = false,
-    allow_undercurl = true,
-    allow_reverse = false,
-    transparent = false,   -- don't set background
-    term_colors = true,    -- if true enable the terminal
-    ending_tildes = false, -- show the end-of-buffer tildes
-    -- ━━━ Custom Highlights ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    ---Override default colors
-    ---@type table<string, string>
-    colors = {},
-    ---Override highlight groups
-    ---@type table<string, KimboxHighlightMap>
-    highlights = {},
-    ---Plugins and langauges that can be disabled
-    ---To view options: print(require("kimbox.highlights").{langs,langs08,plugins})
-    ---@type {langs: string[], langs08: string[], plugins: string[]}
-    disabled = {
-        ---Disabled languages
-        ---@see KimboxHighlightLangs
-        langs = {},
-        ---Disabled languages with '@' treesitter highlights
-        ---@see KimboxHighlightLangs08
-        langs08 = {},
-        ---Disabled plugins
-        ---@see KimboxHighlightPlugins
-        plugins = {},
-    },
-    ---Run a function before the colorscheme is loaded
-    ---@type fun(): nil
-    run_before = nil,
-    ---Run a function after the colorscheme is loaded
-    ---@type fun(): nil
-    run_after = nil,
-})
+
+
 
 
 EOF
@@ -758,4 +752,12 @@ if exists("syntax_on")
     syntax reset
 endif
 let g:material_theme_style = 'darker-community'
-colorscheme material
+let g:gruvbox_material_foreground = 'mix'
+let g:gruvbox_material_disable_italic_comment = 1
+let g:gruvbox_material_enable_bold = 1
+let g:gruvbox_material_cursor = "red"
+let g:gruvbox_material_ui_contrast = "low"
+let g:gruvbox_material_statusline_style = "original"
+
+let g:gruvbox_material_background = 'medium'
+colorscheme gruvbox-material

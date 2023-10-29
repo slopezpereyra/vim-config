@@ -34,6 +34,30 @@ snippet template "Basic template" b
 \end{document}
 endsnippet
 
+snippet dd "delta" iA 
+\\delta
+endsnippet
+
+snippet GG "Gamma" iA 
+\\Gamma
+endsnippet
+
+
+snippet SS "Sigma" iA 
+\\Sigma
+endsnippet
+
+snippet SlS "Sigma language" iA 
+\\Sigma^{*}
+endsnippet
+
+snippet bsp "Big space" iA 
+~ ~ ~ ~ ~ 
+endsnippet
+
+snippet btr "Black triangle" iA 
+\\blacktriangle
+endsnippet
 
 snippet tf "Therefore" iA
 \\therefore 
@@ -260,6 +284,16 @@ endsnippet
 context "math()"
 snippet iff "iff" Ai
 \iff
+endsnippet
+
+context "math()"
+snippet vv "vector" iA 
+\\vec{$1}
+endsnippet
+
+context "math()"
+snippet om "omega" iA 
+\\omega
 endsnippet
 
 snippet mk "Math" wA
@@ -489,8 +523,9 @@ snippet <= "leq" iA
 \le 
 endsnippet
 
+context "math()"
 snippet >= "geq" iA
-\ge 
+\geq
 endsnippet
 
 context "math()"
