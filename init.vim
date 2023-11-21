@@ -760,4 +760,4 @@ let g:gruvbox_material_ui_contrast = "low"
 let g:gruvbox_material_statusline_style = "original"
 
 let g:gruvbox_material_background = 'medium'
-colorscheme gruvbox-material
+colorscheme tokyonight-moon
