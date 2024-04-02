@@ -1,0 +1,198 @@
+snippet lb "Line break" iA
+<br>
+endsnippet
+
+snippet pset "Power set" iA 
+\\mathcal{P}($1)
+endsnippet 
+
+snippet << "Left angle" iA 
+\\langle 
+endsnippet 
+
+snippet >> "Right angle" iA 
+\\rangle 
+endsnippet 
+
+snippet sbe "Subset equal" iA 
+\\subseteq 
+endsnippet
+
+snippet pder "Partial derivative" iA
+\\frac{\partial $1}{\partial $2}
+endsnippet
+
+snippet ~> "Partial order" iA 
+\\preceq
+endsnippet
+
+snippet pspec "Program specification" iA 
+\\{ P \\} ~ S ~ \\{ Q \\}
+endsnippet
+
+snippet nsc "Node super-script" iA
+^{($1)}
+endsnippet
+
+snippet pBig "Big parenthesis" iA
+\\Big( $1 \\Big)
+endsnippet
+
+snippet pbig "Big parenthesis" iA
+\\big( $1 \\big)
+endsnippet
+
+snippet 2dvec "Math cal" iA
+\\begin{pmatrix} 
+	x \\\ y
+\\end{pmatrix}
+endsnippet
+
+snippet lprop "Logical proposition" iA
+\\langle $1 : $2 : $3 \\rangle
+endsnippet
+
+snippet 3dvec "Math cal" iA
+\\begin{pmatrix} 
+	x \\\ y \\\ z
+\\end{pmatrix}
+endsnippet
+
+
+snippet 4dvec "Math cal" iA
+\\begin{pmatrix} 
+	x \\\ y \\\ z \\\ w
+\\end{pmatrix}
+endsnippet
+
+snippet 5dvec "Math cal" iA
+\\begin{pmatrix} 
+	x \\\ y \\\ z \\\ u \\\ w
+\\end{pmatrix}
+endsnippet
+
+
+snippet mcal "Math cal" iA
+\\mathcal{$1}
+endsnippet
+
+snippet beg "begin{} / end{}" bA
+\\begin{$1}
+	$0
+\\end{$1}
+endsnippet
+
+
+priority 100
+snippet mbset "Big Formal set" iA
+\\Big\\{$1\\Big\\}
+endsnippet
+
+priority 100
+snippet mset "Formal set" iA
+\\{$1\\}
+endsnippet
+
+priority 100
+snippet mbb "Math BB" iA
+\mathbb{$1}
+endsnippet
+
+
+priority 100
+snippet tbf "bold" iA
+\\textbf{$1}
+endsnippet
+
+
+priority 100
+snippet ... "ldots" iA
+\ldots
+endsnippet
+
+snippet table "Table environment" b
+\begin{table}[${1:htpb}]
+	\centering
+	\caption{${2:caption}}
+	\label{tab:${3:label}}
+	\begin{tabular}{${5:c}}
+	$0${5/((?<=.)c|l|r)|./(?1: & )/g}
+	\end{tabular}
+\end{table}
+endsnippet
+
+snippet fig "Figure environment" b
+\begin{figure}[${1:htpb}]
+	\centering
+	${2:\includegraphics[width=0.8\textwidth]{$3}}
+	\caption{${4:$3}}
+	\label{fig:${5:${3/\W+/-/g}}}
+\end{figure}
+endsnippet
+
+snippet enum "Enumerate" bA
+\begin{enumerate}
+	\item $0
+\end{enumerate}
+endsnippet
+
+snippet item "Itemize" bA
+\begin{itemize}
+	\item $0
+\end{itemize}
+endsnippet
+
+snippet desc "Description" b
+\begin{description}
+	\item[$1] $0
+\end{description}
+endsnippet
+
+snippet pac "Package" b
+\usepackage[${1:options}]{${2:package}}$0
+endsnippet
+
+snippet l=> "implies" Ai
+\implies
+endsnippet
+
+snippet => "implies" Ai
+\Rightarrow
+endsnippet
+
+snippet =< "implied by" Ai
+\impliedby
+endsnippet
+
+context "math()"
+snippet iff "iff" Ai
+\iff
+endsnippet
+
+snippet mk "Math" wA
+$${1}$`!p
+if t[2] and t[2][0] not in [',', '.', '?', '-', ' ']:
+	snip.rv = ' '
+else:
+	snip.rv = ''
+`$2
+endsnippet
+
+snippet dm "Math" wA
+\[
+${1:${VISUAL}}
+.\] $0
+endsnippet
+
+snippet ali "Align" iA
+\begin{align*}
+	${1:${VISUAL}}
+.\end{align*}
+endsnippet
+
+
+snippet / "Fraction" i
+\\frac{${VISUAL}}{$1}$0
+endsnippet
+
+
