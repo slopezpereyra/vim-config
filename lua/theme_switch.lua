@@ -5,6 +5,8 @@ function toggle_colorscheme()
     if current_colorscheme == 'dracula' then
         vim.cmd('colorscheme gruvbox-material')
     elseif current_colorscheme == 'gruvbox-material' then
+        vim.cmd('colorscheme tokyonight-moon')
+    else
         vim.cmd('colorscheme dracula')
     end
 end

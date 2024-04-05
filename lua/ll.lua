@@ -1,17 +1,11 @@
 require('lualine').setup{
 
-    sections = {
-        lualine_b = {
-            'diagnostics'
-        },
-        lualine_c = {
-            {
-          'buffers',
-          mode = 2
-            }
-        }, 
-        lualine_a = {
-            'datetime'
-        }
-    }
+ sections = {
+    lualine_a = {'mode', 'datetime'},
+    lualine_b = {'branch', 'diff', 'diagnostics'},
+    lualine_c = {'filename', 'buffers'},
+    lualine_x = {'encoding', 'fileformat', 'filetype'},
+    lualine_y = {'progress'},
+    lualine_z = {'location'}
+  },
 }

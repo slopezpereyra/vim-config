@@ -34,8 +34,8 @@ require("lazy").setup(
         'gaalcaras/ncm-R',
 	    'preservim/nerdtree',
         'JuliaEditorSupport/julia-vim',
-        'axvr/zepl.vim',
         'hrsh7th/cmp-nvim-lsp',
+        'Vigemus/iron.nvim',
         'hrsh7th/cmp-buffer',
         'hrsh7th/cmp-path',
         'hrsh7th/cmp-cmdline',
@@ -46,8 +46,15 @@ require("lazy").setup(
         'nvim-lualine/lualine.nvim',
         dependencies = { 'nvim-tree/nvim-web-devicons' }
         },
-	    '/windwp/nvim-autopairs', 
-        'sainnhe/gruvbox-material'
+        {
+            'windwp/nvim-autopairs',
+            event = "InsertEnter",
+            config = true
+            -- use opts = {} for passing setup options
+            -- this is equalent to setup({}) function
+        },
+        'sainnhe/gruvbox-material',
+        'folke/tokyonight.nvim'
     }
 	)
 
@@ -63,7 +70,9 @@ require('ll')
 require('drac')
 require('gruvbox')
 require('theme_switch')
-require('julia_config')
+require('iron_repl')
+--require('julia_config')
+require('tokyo')
 
 		
 vim.cmd('colorscheme dracula')
