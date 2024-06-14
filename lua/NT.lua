@@ -5,4 +5,3 @@ vim.g.NERDTreeMinimalUI = 1
 vim.g.NERDTreeSortOrder = {'[[extension]]'}
 vim.g.NERDTreeShowLineNumbers=1
 vim.g.NERDTreeWinPos = "right"
-vim.api.nvim_exec([[autocmd VimEnter * NERDTree | wincmd p]], false)

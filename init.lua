@@ -16,7 +16,11 @@ vim.opt.rtp:prepend(lazypath)
 require("lazy").setup(
 	{
 		{"nvim-treesitter/nvim-treesitter", build = ":TSUpdate"},
-		'neovim/nvim-lspconfig', 'onsails/lspkind.nvim',
+		'neovim/nvim-lspconfig', 
+        'lewis6991/gitsigns.nvim',
+        'simrat39/symbols-outline.nvim',
+        'junegunn/goyo.vim',
+        'onsails/lspkind.nvim',
 		'hrsh7th/cmp-nvim-lsp',
 		'ray-x/lsp_signature.nvim', 
 		'hrsh7th/nvim-cmp', 
@@ -54,9 +58,48 @@ require("lazy").setup(
             -- this is equalent to setup({}) function
         },
         'sainnhe/gruvbox-material',
-        'folke/tokyonight.nvim'
+        'folke/tokyonight.nvim',
+        {
+          'mrcjkb/haskell-tools.nvim',
+          version = '^3', -- Recommended
+          ft = { 'haskell', 'lhaskell', 'cabal', 'cabalproject' },
+        },
+        -- install without yarn or npm
+        {
+            "iamcco/markdown-preview.nvim",
+            cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
+            ft = { "markdown" },
+            build = function() vim.fn["mkdp#util#install"]() end,
+        }, 
+        {
+            'nvim-telescope/telescope.nvim', tag = '0.1.6',
+        -- or                              , branch = '0.1.x',
+              dependencies = { 'nvim-lua/plenary.nvim' }
+        }, 
+        {
+          'nvim-java/nvim-java',
+          dependencies = {
+            'nvim-java/lua-async-await',
+            'nvim-java/nvim-java-core',
+            'nvim-java/nvim-java-test',
+            'nvim-java/nvim-java-dap',
+            'MunifTanjim/nui.nvim',
+            'neovim/nvim-lspconfig',
+            'mfussenegger/nvim-dap',
+            {
+              'williamboman/mason.nvim',
+              opts = {
+                registries = {
+                  'github:nvim-java/mason-registry',
+                  'github:mason-org/mason-registry',
+                },
+              },
+            }
+          },
+        }
     }
-	)
+)
+
 
 require("defaults")
 require("lsp")
@@ -73,7 +116,16 @@ require('theme_switch')
 require('iron_repl')
 --require('julia_config')
 require('tokyo')
+require('remaps')
+require('telescope')
+require('java').setup()
+require('gitsigns').setup()
+require("symbols-outline").setup()
 
+require('lspconfig').jdtls.setup({})
+vim.api.nvim_set_keymap('n', '<Leader>o', '<Cmd>SymbolsOutline<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<Leader>g', '<Cmd>Goyo<CR>', { noremap = true, silent = true })
 		
-vim.cmd('colorscheme dracula')
+--vim.api.nvim_exec([[autocmd VimEnter * NERDTree | wincmd p]], false)
+vim.cmd('colorscheme gruvbox-material')
 
